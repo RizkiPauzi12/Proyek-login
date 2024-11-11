@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Web Sederhana</title>
+  <style>
+    /* CSS untuk styling dan responsivitas */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .hidden {
+      display: none;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .form-group button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .form-group button:hover {
+      background-color: #0056b3;
+    }
+    #dashboard {
+      text-align: center;
+    }
+    #itemList {
+      list-style-type: none;
+      padding: 0;
+    }
+    #itemList li {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .btn-delete {
+      color: red;
+      cursor: pointer;
+    }
+    /* Responsif */
+    @media (max-width: 500px) {
+      .container {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Formulir Login -->
+  <div id="loginForm">
+    <h2>Login</h2>
+    <div class="form-group">
+      <label for="loginUsername">Username</label>
+      <input type="text" id="loginUsername">
+    </div>
+    <div class="form-group">
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword">
+    </div>
+    <div class="form-group">
+      <button onclick="login()">Login</button>
+    </div>
+    <p>Belum punya akun? <a href="#" onclick="showRegisterForm()">Daftar di sini</a></p>
+  </div>
+
+  <!-- Formulir Pendaftaran -->
+  <div id="registerForm" class="hidden">
+    <h2>Register</h2>
+    <div class="form-group">
+      <label for="registerUsername">Username</label>
+      <input type="text" id="registerUsername">
+    </div>
+    <div class="form-group">
+      <label for="registerPassword">Password</label>
+      <input type="password" id="registerPassword">
+    </div>
+    <div class="form-group">
+      <button onclick="register()">Register</button>
+    </div>
+    <p>Sudah punya akun? <a href="#" onclick="showLoginForm()">Login di sini</a></p>
+  </div>
+
+  <!-- Dashboard Pengguna -->
+  <div id="dashboard" class="hidden">
+    <h2>Dashboard</h2>
+    <p>Selamat datang, <span id="usernameDisplay"></span>!</p>
+    <div class="form-group">
+      <input type="text" id="newItem" placeholder="Tambah item baru">
+      <button onclick="addItem()">Tambah Item</button>
+    </div>
+    <ul id="itemList"></ul>
+    <div class="form-group">
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Simpan data pengguna sementara
+  const users = {};
+
+  // Fungsi untuk menunjukkan formulir pendaftaran
+  function showRegisterForm() {
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.remove('hidden');
+  }
+
+  // Fungsi untuk menunjukkan formulir login
+  function showLoginForm() {
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+  }
+
+  // Fungsi untuk pendaftaran
+  function register() {
+    const username = document.getElementById('registerUsername').value;
+    const password = document.getElementById('registerPassword').value;
+
+    if (username && password) {
+      users[username] = password;
+      alert('Registrasi berhasil!');
+      showLoginForm();
+    } else {
+      alert('Isi semua kolom!');
+    }
+  }
+
+  // Fungsi untuk login
+  function login() {
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+
+    if (users[username] === password) {
+      document.getElementById('usernameDisplay').innerText = username;
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+    } else {
+      alert('Username atau password salah!');
+    }
+  }
+
+  // Fungsi untuk logout
+  function logout() {
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+  }
+
+  // Fungsi untuk menambah item
+  function addItem() {
+    const newItem = document.getElementById('newItem').value;
+    const itemList = document.getElementById('itemList');
+
+    if (newItem) {
+      const li = document.createElement('li');
+      li.innerHTML = `${newItem} <span class="btn-delete" onclick="deleteItem(this)">Hapus</span>`;
+      itemList.appendChild(li);
+      document.getElementById('newItem').value = '';
+    } else {
+      alert('Isi item baru!');
+    }
+  }
+
+  // Fungsi untuk menghapus item
+  function deleteItem(element) {
+    element.parentElement.remove();
+  }
+</script>
+
+</body>
+</html>
